@@ -15,12 +15,13 @@ import Paper from '@material-ui/core/Paper';
 //     },
 //   });
   export default class ShowDataComponent extends Component {
-    Customers =[];
+    
   constructor(props) {
      super(props);
     this.state = {
         name: this.props.name,
-        age: this.props.age
+        age: this.props.age,
+        Customers : []
     }
 
     console.log('showDataComponent', this.props);
@@ -28,13 +29,21 @@ import Paper from '@material-ui/core/Paper';
 getAlert(data) {
     console.log('getAlert from Child', data);
     
-    this.Customers.push({
+    this.state.Customers.push({
         name: data.name,
         age: data.age
     });
-    this.setState({customerData: this.Customers});
-    console.log('Customers', this.Customers);
+    this.setState({customerData: this.state.Customers});
+    console.log('Customers', this.state.Customers);
   }
+  remove = (rowId) => {
+    // Array.prototype.filter returns new array
+    // so we aren't mutating state here
+    console.log(rowId);
+    const arrayCopy = this.state.Customers.filter((row) => row.name !== rowId);
+    console.log(arrayCopy);
+    this.setState({Customers: arrayCopy});
+  };
 render() {
     return(
         <>
@@ -47,10 +56,11 @@ render() {
           </TableRow>
           </TableHead>
           <TableBody>
-          { this.Customers.map((row) => (
-            <TableRow key={row.name}>
+          { this.state.Customers.map((row,i) => ( 
+            <TableRow key={row.name} >
             <TableCell align="right">{row.name}</TableCell>
             <TableCell align="right">{row.age}</TableCell>
+            <TableCell align="right"></TableCell><button onClick={()=>this.remove(row.name)}>Delete Row</button>
             </TableRow>
           ))}
           </TableBody>
